@@ -114,6 +114,7 @@ oauth:
     # IntelliJ IDEA: Run Configuration > EnvFile 탭에서 .env 파일 선택
     # 또는 Run Configuration > Environment variables에서 직접 설정
     client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
 
 tenco:
   # 소셜 로그인 사용자 임시 비밀번호 키 (.env 파일에서 환경 변수로 주입)

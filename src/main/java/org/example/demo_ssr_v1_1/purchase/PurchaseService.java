@@ -11,6 +11,8 @@ import org.example.demo_ssr_v1_1.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 구매 서비스
  * 
@@ -29,6 +31,15 @@ public class PurchaseService {
 
     // 유료 게시글 기본 가격 (500포인트)
     private static final Integer PREMIUM_BOARD_PRICE = 500;
+
+    @Transactional(readOnly = true)
+    public List<PurchaseResponse.ListDTO> 구매내역조회(Long userId) {
+        List<Purchase> purchaseList = purchaseRepository.findAllByUserIdWithBoard(userId);
+
+        return purchaseList.stream()
+                .map(PurchaseResponse.ListDTO::new)
+                .toList();
+    }
 
     /**
      * 유료 게시글 구매

@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.demo_ssr_v1_1._core.errors.exception.Exception400;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -36,28 +38,7 @@ public class User {
     @ColumnDefault("0")
     private Integer point = 0;
 
-    /**
-     * [사용자 권한 목록]
-     * User(1) : UserRole(N)의 관계를 맺습니다.
-     *
-     * 1. @OneToMany + @JoinColumn(name = "user_id")
-     * - User가 UserRole 리스트를 관리합니다. (단방향)
-     * - 실제 DB의 'user_role_tb' 테이블에 'user_id'라는 FK 컬럼이 생깁니다.
-     *
-     * 2. CascadeType.ALL
-     * - "운명 공동체"입니다. User를 저장(save)하면 Role도 자동 저장되고, 
-     * User를 삭제(delete)하면 가지고 있던 Role들도 다 같이 삭제됩니다.
-     *
-     * 3. orphanRemoval = true
-     * - "리스트와 DB의 동기화"입니다. 
-     * Java의 roles 리스트에서 요소(Role)를 .remove() 하거나 .clear() 하면,
-     * DB에서도 해당 데이터(DELETE 쿼리)가 실제로 삭제됩니다.
-     *
-     * 4. fetch = FetchType.EAGER
-     * - "즉시 로딩"입니다. User를 조회(select)하는 시점에
-     * 무조건 Role 데이터까지 조인(JOIN)해서 한 번에 가져옵니다.
-     * (뷰 렌더링 시 LazyInitializationException 방지 목적)
-     */
+
     // 리스트는 절대 null이 아니도록 초기화
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

@@ -31,27 +31,12 @@ public class UserService {
     @Value("${oauth.kakao.client-id}")
     private String kakaoClientId;
 
+    @Value("${oauth.kakao.secret}")
+    private String kakaoSecretKey;
+
     @Value("${tenco.key}")
     private String tencoKey;
 
-    /**
-     * 회원가입 처리 (프로필 이미지 포함)
-     * 
-     * 비즈니스 로직:
-     * 1. 유효성 검사 (DTO에서 처리)
-     * 2. 사용자명 중복 체크
-     * 3. 프로필 이미지 저장 (선택사항)
-     * 4. 기본 권한(USER) 추가
-     * 5. 엔티티 저장
-     * 
-     * 트랜잭션:
-     * - 기본 트랜잭션 (읽기/쓰기)
-     * - save() 메서드 실행 시 INSERT 쿼리 실행
-     * 
-     * @param joinDTO 회원가입 DTO (프로필 이미지 포함)
-     * @return 저장된 사용자 엔티티
-     * @throws Exception400 사용자명이 이미 존재할 경우 또는 파일 저장 실패 시
-     */
     @Transactional
     public User 회원가입(UserRequest.JoinDTO joinDTO) {
         // 1. 유효성 검사
@@ -436,8 +421,7 @@ public class UserService {
         params.add("client_id", kakaoClientId);
         params.add("redirect_uri", "http://localhost:8080/user/kakao");
         params.add("code", code);
-        // !!! 시크릿키 비활성화 했을 경우 !!!
-        params.add("client_secret", "AhbShsedonaVOqoMyRgl0sjX6ZXNsbHU");
+        params.add("client_secret", kakaoSecretKey);
 
         // 헤더 + 바디 결합
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
